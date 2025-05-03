@@ -3,22 +3,32 @@ import 'dart:developer';
 import 'package:get/get.dart';
 
 class SeatController extends GetxController {
-  final int totalSeats;
-  final int columns;
+  RxBool isLoading = false.obs;
+  RxInt totalSeats = 0.obs;
+  RxInt columns = 0.obs;
 
-  // List of booked seats
-  final List<String> getBookedSeats = ['C2', 'C3', 'D1', 'E1'];
-
-  // Converts the booked seats list to a Set for efficient lookups
   final bookedSeats = <String>{}.obs;
 
-  // Initialize bookedSeats with the list of booked seats
-  SeatController(this.totalSeats, this.columns) {
-    bookedSeats.addAll(getBookedSeats); // Populate the Set with the initial booked seats
+  final selectedSeats = <String>{}.obs;
+  final List<String> getBookedSeats = ['C2', 'C3', 'D1', 'E1'];
+
+  @override
+  void onInit() {
+    super.onInit();
+    isLoading.value = true;
+    getArguments();
+    bookedSeats.addAll(getBookedSeats);
+    isLoading.value = false;
   }
 
-  // Selected seats (reactive)
-  final selectedSeats = <String>{}.obs;
+  void getArguments() async {
+    var a =  Get.arguments;
+    log(a.toString());
+    if (a != null) {
+      totalSeats.value = a['totalSeats'];
+      columns.value = a['columns'];
+    }
+  }
 
   bool isBooked(String seat) => bookedSeats.contains(seat);
   bool isSelected(String seat) => selectedSeats.contains(seat);
@@ -30,7 +40,7 @@ class SeatController extends GetxController {
       log(selectedSeats.toList().toString());
     } else {
       selectedSeats.add(seat);
-            log(selectedSeats.toList().toString());
+      log(selectedSeats.toList().toString());
     }
   }
 
@@ -39,16 +49,16 @@ class SeatController extends GetxController {
     int seatNumber = 0;
     int rowIndex = 0;
 
-    while (seatNumber < totalSeats) {
+    while (seatNumber < totalSeats.value) {
       String rowLetter = String.fromCharCode(65 + rowIndex);
       List<String> rowSeats = [];
 
-      for (int i = 1; i <= columns && seatNumber < totalSeats; i++) {
+      for (int i = 1; i <= columns.value && seatNumber < totalSeats.value; i++) {
         rowSeats.add('$rowLetter$i');
         seatNumber++;
       }
 
-      if (seatNumber == totalSeats - 1) {
+      if (seatNumber == totalSeats.value - 1) {
         rowSeats.add('$rowLetter${rowSeats.length + 1}');
         seatNumber++;
       }

@@ -1,37 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import 'seat_controller.dart';
+import 'package:seat_layout/seat/controller.dart';
 
 class SeatLayout extends StatelessWidget {
-  final int totalSeats;
-  final int columns;
-
-  const SeatLayout({super.key, required this.totalSeats, required this.columns});
+  const SeatLayout({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final SeatController controller = Get.put(SeatController(totalSeats, columns));
+    final SeatController controller = Get.put(SeatController());
     final rows = controller.getSeatLabelsByRow();
 
     return Scaffold(
       appBar: AppBar(title: const Text("Seat Layout")),
-      body: ListView.builder(
-        itemCount: rows.length,
-        itemBuilder: (context, rowIndex) {
-          final rowSeats = rows[rowIndex];
-          final isFullRow = rowSeats.length == columns;
+      body:
+          controller.isLoading.isTrue
+              ? Center(child: CircularProgressIndicator())
+              : ListView.builder(
+                itemCount: rows.length,
+                itemBuilder: (context, rowIndex) {
+                  final rowSeats = rows[rowIndex];
+                  final isFullRow = rowSeats.length == controller.columns.value;
 
-          if (isFullRow) {
-            final leftCount = columns ~/ 2;
-            final leftSeats = rowSeats.take(leftCount).toList();
-            final rightSeats = rowSeats.skip(leftCount).toList();
-            return _rowWithAisle(controller, leftSeats, rightSeats);
-          } else {
-            return _customRow(controller, rowSeats);
-          }
-        },
-      ),
+                  if (isFullRow) {
+                    final leftCount = controller.columns.value ~/ 2;
+                    final leftSeats = rowSeats.take(leftCount).toList();
+                    final rightSeats = rowSeats.skip(leftCount).toList();
+                    return _rowWithAisle(controller, leftSeats, rightSeats);
+                  } else {
+                    return _customRow(controller, rowSeats);
+                  }
+                },
+              ),
     );
   }
 
