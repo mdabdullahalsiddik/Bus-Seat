@@ -30,15 +30,15 @@ class SeatController extends GetxController {
     String rowLetter = String.fromCharCode(65 + rowIndex);
     List<String> rowSeats = [];
 
-    // Add seats up to the number of columns or remaining seats
+ 
     for (int i = 1; i <= columns && seatNumber < totalSeats; i++) {
       rowSeats.add('$rowLetter$i');
       seatNumber++;
     }
 
-    // If last row and there are still remaining seats, add them too
+
     if (seatNumber == totalSeats - 1) {
-      // 1 seat left – put it in the same row
+  
       rowSeats.add('$rowLetter${rowSeats.length + 1}');
       seatNumber++;
     }

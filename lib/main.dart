@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: SeatLayout(totalSeats: 41, columns: 4), // change 3 or 4 as needed
+      home: SeatLayout(totalSeats: 40, columns: 3), // change 3 or 4 as needed
     );
   }
 }
