@@ -27,7 +27,7 @@ class SeatLayout extends StatelessWidget {
             final rightSeats = rowSeats.skip(leftCount).toList();
             return _rowWithAisle(controller, leftSeats, rightSeats);
           } else {
-            return _centeredRow(controller, rowSeats);
+            return _customRow(controller, rowSeats);
           }
         },
       ),
@@ -48,14 +48,39 @@ class SeatLayout extends StatelessWidget {
     );
   }
 
-  Widget _centeredRow(SeatController controller, List<String> seats) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: seats.map((label) => _buildSeat(controller, label)).toList(),
-      ),
-    );
+  Widget _customRow(SeatController controller, List<String> seats) {
+    final total = seats.length;
+
+    if (total == 4) {
+      final left = seats.take(2).toList();
+      final right = seats.skip(2).toList();
+      return _rowWithAisle(controller, left, right);
+    } else if (total == 5) {
+      final left = seats.take(2).toList();
+      final center = seats[2];
+      final right = seats.skip(3).toList();
+
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(children: left.map((label) => _buildSeat(controller, label)).toList()),
+            _buildSeat(controller, center),
+            Row(children: right.map((label) => _buildSeat(controller, label)).toList()),
+          ],
+        ),
+      );
+    } else {
+      // Default fallback: center all seats
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: seats.map((label) => _buildSeat(controller, label)).toList(),
+        ),
+      );
+    }
   }
 
   Widget _buildSeat(SeatController controller, String label) {
