@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'seat_controller.dart';
 
 class SeatLayout extends StatelessWidget {
   final int totalSeats;
   final int columns;
 
-  SeatLayout({required this.totalSeats, required this.columns});
+  const SeatLayout({super.key, required this.totalSeats, required this.columns});
 
   @override
   Widget build(BuildContext context) {
@@ -75,10 +76,7 @@ class SeatLayout extends StatelessWidget {
       // Default fallback: center all seats
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: seats.map((label) => _buildSeat(controller, label)).toList(),
-        ),
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: seats.map((label) => _buildSeat(controller, label)).toList()),
       );
     }
   }
@@ -89,20 +87,16 @@ class SeatLayout extends StatelessWidget {
       final isSelected = controller.isSelected(label);
 
       Color color = Colors.grey[400]!;
-      if (isBooked) color = Colors.black;
-      else if (isSelected) color = Colors.orange;
+      if (isBooked)
+        color = Colors.black;
+      else if (isSelected)
+        color = Colors.orange;
 
       return GestureDetector(
         onTap: () => controller.toggleSeat(label),
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 6),
-          child: Column(
-            children: [
-              Icon(Icons.event_seat, color: color, size: 32),
-              const SizedBox(height: 4),
-              Text(label, style: const TextStyle(fontSize: 12)),
-            ],
-          ),
+          child: Column(children: [Text(label, style: const TextStyle(fontSize: 12)), Icon(Icons.event_seat, color: color, size: 38)]),
         ),
       );
     });
